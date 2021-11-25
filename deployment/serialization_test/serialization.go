@@ -40,7 +40,6 @@ func main() {
 	msgArray1 := PrepareGoBinMsgArray()
 	n, _ := msgArray1[0].BinarySize()
 	msgArray2 := PrepareProtoMsgArray()
-	msgArray3 := PrepareGoGoMsgArray()
 	fmt.Println("msgSizes", n, proto.Size(&msgArray2[0]), msgArray3[0].Size())
 
 	switch *idx {
@@ -49,7 +48,6 @@ func main() {
 		_, conn1Writer := GetReaderWriter(conn)
 
 		ProtoS0(msgArray2, conn1Writer)
-		GoGoS0(msgArray3, conn1Writer)
 		GoBinS0(msgArray1, conn1Writer)
 
 		CloseNetworkS0(listener, conn)
@@ -59,7 +57,6 @@ func main() {
 		conn2Reader, _ := GetReaderWriter(conn)
 
 		fmt.Println("Protobuf", ProtoS1(msgArray2, conn2Reader), "ns/op")
-		fmt.Println("GoGo", GoGoS1(msgArray3, conn2Reader), "ns/op")
 		fmt.Println("GoBin", GoBinS1(conn2Reader), "ns/op")
 
 		CloseNetworkS1(conn)
@@ -138,30 +135,6 @@ func ProtoS1(msgArray []ProtoMsg, conn2Reader *bufio.Reader) int64 {
 		n := proto.Size(&msgArray[i%len(msgArray)])
 		_, _ = io.ReadFull(conn2Reader, read[:n])
 		if err := proto.Unmarshal(read[:n], q2); err != nil {
-			panic(err)
-		}
-
-	}
-	timeDiff := time.Now().Sub(time1).Nanoseconds()
-	return timeDiff / int64(iterations)
-}
-
-func GoGoS0(msgArray []GoGoMsg, conn1Writer *bufio.Writer) {
-	for i := 0; i < iterations; i++ {
-		data, _ := msgArray[i%len(msgArray)].Marshal()
-		_, _ = conn1Writer.Write(data)
-		_ = conn1Writer.Flush()
-	}
-}
-
-func GoGoS1(msgArray []GoGoMsg, conn2Reader *bufio.Reader) int64 {
-	q2 := &GoGoMsg{}
-	read := make([]byte, readBufSize)
-	time1 := time.Now()
-	for i := 0; i < iterations; i++ {
-		n := msgArray[i%len(msgArray)].Size()
-		_, _ = io.ReadFull(conn2Reader, read[:n])
-		if err := q2.Unmarshal(read[:n]); err != nil {
 			panic(err)
 		}
 

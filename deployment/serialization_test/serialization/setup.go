@@ -110,26 +110,11 @@ func RandProtoMsg() *ProtoMsg {
 	return s
 }
 
-func RandGoGoMsg() *GoGoMsg {
-	s := &GoGoMsg{}
-	v := reflect.ValueOf(s).Elem()
-	for i := 0; i < v.NumField(); i++ {
-		if v.Field(i).CanSet() { // a Key or a Val field
-			v.Field(i).SetInt(rand.Int63())
-		}
-	}
-	return s
-}
-
 func PrintGoBinMsg(msg *GoBinMsg) string {
 	return fmt.Sprint(reflect.ValueOf(msg).Elem())
 }
 
 func PrintProtoMsg(msg *ProtoMsg) string {
-	return msg.String()
-}
-
-func PrintGoGoMsg(msg *GoGoMsg) string {
 	return msg.String()
 }
 
@@ -145,14 +130,6 @@ func PrepareProtoMsgArray() []ProtoMsg {
 	msgArray := make([]ProtoMsg, 1000)
 	for i := 0; i < len(msgArray); i++ {
 		msgArray[i] = *RandProtoMsg()
-	}
-	return msgArray
-}
-
-func PrepareGoGoMsgArray() []GoGoMsg {
-	msgArray := make([]GoGoMsg, 1000)
-	for i := 0; i < len(msgArray); i++ {
-		msgArray[i] = *RandGoGoMsg()
 	}
 	return msgArray
 }

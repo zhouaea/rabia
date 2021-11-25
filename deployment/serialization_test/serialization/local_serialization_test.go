@@ -40,11 +40,6 @@ func TestRandProtoMsg(t *testing.T) {
 	t.Log(PrintProtoMsg(msg))
 }
 
-func TestRandGoGoMsg(t *testing.T) {
-	msg := RandGoGoMsg()
-	t.Log(PrintGoGoMsg(msg))
-}
-
 func TestGoBin_Local_OneMsg(t *testing.T) {
 	q1 := RandGoBinMsg()
 	t.Log("Prepare to send data:", PrintGoBinMsg(q1))
@@ -117,48 +112,8 @@ func TestProto_Network_OneMsg(t *testing.T) {
 	CloseNetwork(listener, conn1, conn2)
 }
 
-func TestGoGo_Local_OneMsg(t *testing.T) {
-	q1 := RandGoGoMsg()
-	t.Log("Prepare to send data:", PrintGoGoMsg(q1))
-	buf := new(bytes.Buffer)
-	data, _ := q1.Marshal()
-	buf.Write(data)
-
-	q2 := &GoGoMsg{}
-	read := make([]byte, readBufSize)
-	n := q2.Size()
-	_, _ = io.ReadFull(buf, read[:n])
-	if err := q2.Unmarshal(read[:n]); err != nil {
-		panic(err)
-	}
-	t.Log("Received data:", PrintGoGoMsg(q2))
-}
-
-func TestGoGo_Network_OneMsg(t *testing.T) {
-	listener, conn1, conn2 := SetupNetwork()
-	_, conn1Writer := GetReaderWriter(conn1)
-	conn2Reader, _ := GetReaderWriter(conn2)
-
-	q1 := RandGoGoMsg()
-	t.Log("Prepare to send data:", PrintGoGoMsg(q1))
-	data, _ := q1.Marshal()
-	_, _ = conn1Writer.Write(data)
-	_ = conn1Writer.Flush()
-
-	q2 := &GoGoMsg{}
-	read := make([]byte, readBufSize)
-	n := q2.Size()
-	_, _ = io.ReadFull(conn2Reader, read[:n])
-	if err := q2.Unmarshal(read[:n]); err != nil {
-		panic(err)
-	}
-	t.Log("Received data:", PrintGoGoMsg(q2))
-
-	CloseNetwork(listener, conn1, conn2)
-}
-
 /*
-	Note: ProtoMsg and GoGoMsg messages have dynamic sizes
+	Note: ProtoMsg messages have dynamic sizes
 */
 
 /*
@@ -233,49 +188,6 @@ func BenchmarkProto_Network_OneDirection(b *testing.B) {
 			n := proto.Size(&msgArray[i%len(msgArray)])
 			_, _ = io.ReadFull(conn2Reader, read[:n])
 			if err := proto.Unmarshal(read[:n], q2); err != nil {
-				panic(err)
-			}
-
-			b.SetBytes(int64(n))
-		}
-	}()
-
-	wg.Wait()
-	CloseNetwork(listener, conn1, conn2)
-}
-
-/*
-	SetBytes: conn2's bytes received per second
-*/
-func BenchmarkGoGo_Network_OneDirection(b *testing.B) {
-	listener, conn1, conn2 := SetupNetwork()
-	_, conn1Writer := GetReaderWriter(conn1)
-	conn2Reader, _ := GetReaderWriter(conn2)
-
-	msgArray := PrepareGoGoMsgArray()
-	wg := sync.WaitGroup{}
-	wg.Add(2)
-	b.ResetTimer()
-
-	go func() {
-		defer wg.Done()
-
-		for i := 0; i < b.N; i++ {
-			data, _ := msgArray[i%len(msgArray)].Marshal()
-			_, _ = conn1Writer.Write(data)
-			_ = conn1Writer.Flush()
-		}
-	}()
-
-	go func() {
-		defer wg.Done()
-		q2 := &GoGoMsg{}
-		read := make([]byte, readBufSize)
-
-		for i := 0; i < b.N; i++ {
-			n := msgArray[i%len(msgArray)].Size()
-			_, _ = io.ReadFull(conn2Reader, read[:n])
-			if err := q2.Unmarshal(read[:n]); err != nil {
 				panic(err)
 			}
 

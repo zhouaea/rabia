@@ -49,28 +49,6 @@ func Test_Generate_GoBinMsg(t *testing.T) {
 	_ = f.Close()
 }
 
-func Test_Generate_GoGoMsg(t *testing.T) {
-	f, err := os.Create("./gogo_msg.proto")
-	check(err)
-	_, _ = f.WriteString("syntax = \"proto3\";\n\n" +
-		"/*\n" +
-		"  protoc -I=. -I=$GOPATH/src -I=$GOPATH/src/github.com/gogo/protobuf/protobuf --gogoslick_out=. ./gogo_msg.proto\n" +
-		"*/\n" +
-		"\n" +
-		"package serialization;\n" +
-		"import \"github.com/gogo/protobuf/gogoproto/gogo.proto\";\n" +
-		"option (gogoproto.marshaler_all) = true;\n" +
-		"option (gogoproto.unmarshaler_all) = true;\n\n")
-
-	_, _ = f.WriteString("message GoGoMsg {\n")
-	for i := 0; i < KeyNum; i++ {
-		_, _ = f.WriteString(fmt.Sprintf("\tint64 Key%d = %d; \n", i, i))
-	}
-	_, _ = f.WriteString("}")
-
-	_ = f.Close()
-}
-
 func Test_Generate_ProtoMsg(t *testing.T) {
 	f, err := os.Create("./proto_msg.proto")
 	check(err)
