@@ -22,14 +22,11 @@ import (
 )
 
 /*
-	KeyNum			1	2	4	8	16	32
-	Message Size(B)	16	32	64	128	256	512
-
-	KeyNum			64		128		256		512		1024	2048
-	Message Size(B)	1024	2048	4096	8192	16384	32768
+	KeyNum          1    2	    3      4     ...
+	Message Size(B)	8    16	    24     32    ...
 */
 
-var KeyNum = 1 // KeyNum * 2 * 8 bytes = message size
+var KeyNum = 7 // KeyNum  = number of int64 data types (8 bytes each)
 
 func check(e error) {
 	if e != nil {
@@ -47,7 +44,6 @@ func Test_Generate_GoBinMsg(t *testing.T) {
 	_, _ = f.WriteString("type GoBinMsg struct {\n")
 	for i := 0; i < KeyNum; i++ {
 		_, _ = f.WriteString(fmt.Sprintf("\tKey%d int64\n", i))
-		_, _ = f.WriteString(fmt.Sprintf("\tVal%d int64\n", i))
 	}
 	_, _ = f.WriteString("}")
 	_ = f.Close()
@@ -68,8 +64,7 @@ func Test_Generate_GoGoMsg(t *testing.T) {
 
 	_, _ = f.WriteString("message GoGoMsg {\n")
 	for i := 0; i < KeyNum; i++ {
-		_, _ = f.WriteString(fmt.Sprintf("\tint64 Key%d = %d; \n", i, i*2+1))
-		_, _ = f.WriteString(fmt.Sprintf("\tint64 Val%d = %d; \n", i, i*2+2))
+		_, _ = f.WriteString(fmt.Sprintf("\tint64 Key%d = %d; \n", i, i))
 	}
 	_, _ = f.WriteString("}")
 
@@ -88,8 +83,7 @@ func Test_Generate_ProtoMsg(t *testing.T) {
 
 	_, _ = f.WriteString("message ProtoMsg {\n")
 	for i := 0; i < KeyNum; i++ {
-		_, _ = f.WriteString(fmt.Sprintf("\tint64 Key%d = %d; \n", i, i*2+1))
-		_, _ = f.WriteString(fmt.Sprintf("\tint64 Val%d = %d; \n", i, i*2+2))
+		_, _ = f.WriteString(fmt.Sprintf("\tint64 Key%d = %d; \n", i, i))
 	}
 	_, _ = f.WriteString("}")
 
