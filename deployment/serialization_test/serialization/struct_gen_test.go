@@ -39,7 +39,7 @@ func Test_Generate_GoBinMsg(t *testing.T) {
 	check(err)
 	_, _ = f.WriteString("package serialization\n")
 	_, _ = f.WriteString("\n")
-	_, _ = f.WriteString("// ~/go/src/gobin-codegen/bin/bi ~/go/src/rc3/serialization/gobin_msg.go > ~/go/src/rc3/serialization/gobin_gen.go \n")
+	_, _ = f.WriteString("// ~/go/src/gobin-codegen/bin/bi ~/go/src/rabia/serialization/gobin_msg.go > ~/go/src/rabia/serialization/gobin_gen.go \n")
 	_, _ = f.WriteString("\n")
 	_, _ = f.WriteString("type GoBinMsg struct {\n")
 	for i := 0; i < KeyNum; i++ {

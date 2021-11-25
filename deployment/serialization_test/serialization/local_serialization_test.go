@@ -24,7 +24,7 @@ import (
 )
 
 /*
-	cd ~/go/src/rc3/serialization_test/serialization
+	cd ~/go/src/rabia/serialization_test/serialization
 	go test -bench=. -test.benchtime=2s
 */
 

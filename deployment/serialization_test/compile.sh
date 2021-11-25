@@ -19,8 +19,8 @@ END
 
 cd serialization
 rm -f *.pb.go
-~/go/src/gobin-codegen/bin/bi ~/go/src/rc3/deployment/serialization_test/serialization/gobin_msg.go \
-    > ~/go/src/rc3/deployment/serialization_test/serialization/gobin_msg.pb.go
+~/go/src/gobin-codegen/bin/bi ~/go/src/rabia/deployment/serialization_test/serialization/gobin_msg.go \
+    > ~/go/src/rabia/deployment/serialization_test/serialization/gobin_msg.pb.go
 protoc -I=. -I=$GOPATH/src -I=$GOPATH/src/google/protobuf --go_out=. ./proto_msg.proto
 cd ..
 
