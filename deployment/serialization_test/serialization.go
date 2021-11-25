@@ -28,7 +28,7 @@ import (
 )
 
 var idx = flag.Int("idx", 0, "0 or 1")
-var iterations = 10000000 / 32
+var iterations = 100000
 var s0Addr = "10.142.15.225:17070"
 var readBufSize = 4000 * 1024
 var seed = 715
