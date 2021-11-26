@@ -13,12 +13,11 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 */
-package serialization
+package main
 
 import (
 	"fmt"
 	"os"
-	"testing"
 )
 
 /*
@@ -28,14 +27,20 @@ import (
 
 var KeyNum = 7 // KeyNum  = number of int64 data types (8 bytes each)
 
+func main() {
+	Generate_GoBinMsg()
+	Generate_ProtoMsg()
+}
+
+
 func check(e error) {
 	if e != nil {
 		panic(e)
 	}
 }
 
-func Test_Generate_GoBinMsg(t *testing.T) {
-	f, err := os.Create("./gobin_msg.go")
+func Generate_GoBinMsg() {
+	f, err := os.Create("./serialization/gobin_msg.go")
 	check(err)
 	_, _ = f.WriteString("package serialization\n")
 	_, _ = f.WriteString("\n")
@@ -49,8 +54,8 @@ func Test_Generate_GoBinMsg(t *testing.T) {
 	_ = f.Close()
 }
 
-func Test_Generate_ProtoMsg(t *testing.T) {
-	f, err := os.Create("./proto_msg.proto")
+func Generate_ProtoMsg() {
+	f, err := os.Create("./serialization/proto_msg.proto")
 	check(err)
 	_, _ = f.WriteString("syntax = \"proto3\";\n\n" +
 		"/*\n" +
