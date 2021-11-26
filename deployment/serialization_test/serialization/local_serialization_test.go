@@ -17,7 +17,7 @@ package serialization
 
 import (
 	"bytes"
-	"google/protobuf/proto"
+	"google.golang.org/protobuf/proto"
 	"io"
 	"sync"
 	"testing"
