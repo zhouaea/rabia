@@ -19,7 +19,7 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
-	"google.golang.org/protobuf/proto"
+	"google/protobuf/proto"
 	"io"
 	"math/rand"
 	"net"
