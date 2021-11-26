@@ -61,7 +61,7 @@ func Test_Generate_ProtoMsg(t *testing.T) {
 
 	_, _ = f.WriteString("message ProtoMsg {\n")
 	for i := 0; i < KeyNum; i++ {
-		_, _ = f.WriteString(fmt.Sprintf("\tint64 Key%d = %d; \n", i, i))
+		_, _ = f.WriteString(fmt.Sprintf("\tint64 Key%d = %d; \n", i, i + 1))
 	}
 	_, _ = f.WriteString("}")
 
